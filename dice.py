@@ -54,10 +54,9 @@ DIE_FACE_SEPARATOR = " "
 
 def parse_input(input_string: str) -> int:
     """
-    Returns 'input_string' as an integer between 1 and 6. Check whether
-    the user input is an integer between 1 and 6, and if so, return an 
-    integer with the same value. Otherwise, exit the program gracefully
-    and tell the user to supply a valid value
+    Returns 'input_string' as an integer (no limit on number). Check whether
+    the user input is an integer, and if so, return an integer with the same value. 
+    Otherwise, exit the program gracefully and tell the user to supply a valid value
 
     Args:
        input_string (str): String value representing user chosen number
@@ -66,10 +65,10 @@ def parse_input(input_string: str) -> int:
     Returns:
         int: Input_string converted to an integer.
     """
-    if input_string.strip() in {"1", "2", "3", "4", "5", "6"}:
+    if input_string.strip().isnumeric():
         return int(input_string)
     else:
-        print("Please enter a value between 1 and 6. Exiting program.")
+        print("Please enter a whole number. Exiting program.")
         raise SystemExit(1)
 
 def roll_dice(num_dice: int) -> List[int]:
@@ -116,12 +115,15 @@ def _get_dice_faces(dice_values):
 
 def _generate_dice_faces_rows(dice_faces):
     dice_faces_rows = []
-    for row_idx in range(DIE_HEIGHT):
-        row_components = []
-        for die in dice_faces:
-            row_components.append(die[row_idx])
-        row_string = DIE_FACE_SEPARATOR.join(row_components)
-        dice_faces_rows.append(row_string)
+    num_dice = len(dice_faces) 
+    num_dice_rows = (num_dice - 1) // 6 + 1 # get total number of rows of dice with 6 per row
+    for i in range(num_dice_rows):
+        for row_idx in range(DIE_HEIGHT):
+            row_components = []
+            for die in dice_faces[6*i:6*i+6]:
+                row_components.append(die[row_idx])
+            row_string = DIE_FACE_SEPARATOR.join(row_components)
+            dice_faces_rows.append(row_string)
     return dice_faces_rows
 
 def sum_dice_rolls(roll_results: List[int]) -> int:
@@ -138,7 +140,7 @@ def sum_dice_rolls(roll_results: List[int]) -> int:
 
 def main():
     # 1. Get and validate the user's input
-    num_dice_input = input("How many dice do you want to roll? [1-6] ")
+    num_dice_input = input("How many dice do you want to roll? (Whole number) ")
     num_dice = parse_input(num_dice_input)
 
     # 2. Roll the dice

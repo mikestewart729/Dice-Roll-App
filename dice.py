@@ -1,5 +1,8 @@
 # dice.py
 
+import random
+from typing import List
+
 def parse_input(input_string: str) -> int:
     """
     Returns 'input_string' as an integer between 1 and 6. Check whether
@@ -20,10 +23,31 @@ def parse_input(input_string: str) -> int:
         print("Please enter a value between 1 and 6. Exiting program.")
         raise SystemExit(1)
 
+def roll_dice(num_dice: int) -> List[int]:
+    """
+    Simulate rolling num_dice dice and return the output.
+
+    Args:
+       num_dice (int): Number of dice to simulate rolling.
+
+    Returns:
+       List[int]: Results of the num_dice rolls in a list.
+    """
+    roll_results = []
+    for _ in range(num_dice):
+        roll = random.randint(1, 6)
+        roll_results.append(roll)
+    return roll_results
+
 def main():
     # 1. Get and validate the user's input
     num_dice_input = input("How many dice do you want to roll? [1-6] ")
     num_dice = parse_input(num_dice_input)
+
+    # 2. Roll the dice
+    roll_results = roll_dice(num_dice)
+    # for debugging:
+    print(roll_results)
 
 if __name__ == '__main__':
     main()

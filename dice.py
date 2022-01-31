@@ -1,6 +1,7 @@
 # dice.py
 
 import random
+import argparse
 from typing import List
 
 # Constants
@@ -138,10 +139,48 @@ def sum_dice_rolls(roll_results: List[int]) -> int:
     """
     return sum(roll_results)
 
+def parse_user_cli_args():
+    """
+    Read the user command line inputs, if there are any, and adapt the program 
+    according to user specifications.
+    """
+    parser = argparse.ArgumentParser(
+        description="Rolls a user selected number of dice and displays them."
+    )
+    parser.add_argument(
+        '-n',
+        '--number',
+        type=int,
+        help="Number of dice to roll."
+    )
+    parser.add_argument(
+        '-s',
+        '--sum',
+        action='store_true',
+        help='Display the total sum of all the dice rolled.'
+    )
+    return parser.parse_args()
+
+def parse_display_sum(display_sum):
+    """
+    Converts user input of y/n or Y/N, Yes/No, YES/NO, True/False, 0/1 to a boolean
+    value and returns
+    """
+    display_sum = display_sum.strip().lower()
+    if display_sum in {"y", "yes", "true", "1"}:
+        return True
+    return False
+
 def main():
+    # 0. Get command line arguments from the user, if any
+    user_args = parse_user_cli_args()
+
     # 1. Get and validate the user's input
-    num_dice_input = input("How many dice do you want to roll? (Whole number) ")
-    num_dice = parse_input(num_dice_input)
+    if user_args.number is None:
+        num_dice_input = input("How many dice do you want to roll? (Whole number) ")
+        num_dice = parse_input(num_dice_input)
+    else:
+        num_dice = user_args.number
 
     # 2. Roll the dice
     roll_results = roll_dice(num_dice)
@@ -154,9 +193,13 @@ def main():
     # 4. Display the diagram
     print(f"\n{dice_face_diagram}")
 
-    # 5. Display the sum of the dice rolls
-    total = sum_dice_rolls(roll_results)
-    print(f"\nThe total value of the dice rolls is: {total}")
+    # 5. Display the sum of the dice rolls if requested
+    if not user_args.sum:
+        display_sum = input("Sum your dice? [y/n] ")
+        sum_dice = parse_display_sum(display_sum)
+    if user_args.sum or sum_dice:
+        total = sum_dice_rolls(roll_results)
+        print(f"\nThe total value of the dice rolls is: {total}")
 
 if __name__ == '__main__':
     main()

@@ -124,6 +124,18 @@ def _generate_dice_faces_rows(dice_faces):
         dice_faces_rows.append(row_string)
     return dice_faces_rows
 
+def sum_dice_rolls(roll_results: List[int]) -> int:
+    """
+    Returns the total value of the rolled dice.
+
+    Args:
+       roll_results (List[int]): Dice roll values to be summed
+
+    Returns:
+       int: Total value of the rolled dice.
+    """
+    return sum(roll_results)
+
 def main():
     # 1. Get and validate the user's input
     num_dice_input = input("How many dice do you want to roll? [1-6] ")
@@ -139,6 +151,10 @@ def main():
 
     # 4. Display the diagram
     print(f"\n{dice_face_diagram}")
+
+    # 5. Display the sum of the dice rolls
+    total = sum_dice_rolls(roll_results)
+    print(f"\nThe total value of the dice rolls is: {total}")
 
 if __name__ == '__main__':
     main()
